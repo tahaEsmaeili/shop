@@ -1,0 +1,60 @@
+﻿@model shop.ViewModels.OrdersViewModel
+
+@{
+    ViewBag.Title = "ShowOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ShowOrders</h2>
+<table id="orders" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Row Number</th>
+            <th>Product Name</th>
+            <th>Product Price</th>
+            <th>Number Of Product</th>
+            <th>Total price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Orders.Count(); i++)
+        {
+            <tr>
+                <th>@{int row = i + 1; @row}</th>
+                <th>@Model.ProductsName.ElementAt(i)</th>
+                <th>@Model.Orders.ElementAt(i).Price</th>
+                <th>@Model.Orders.ElementAt(i).Count</th>
+                <th>@{double rowTotal = (Model.Orders.ElementAt(i).Count) * (Model.Orders.ElementAt(i).Price); @rowTotal}</th>
+            </tr>
+        }
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>
+                Total: @{double total = 0;
+                    for (int j = 0; j < Model.Orders.Count(); j++)
+                    {
+                        total += (Model.Orders.ElementAt(j).Count) * (Model.Orders.ElementAt(j).Price);
+                    }
+                    @total
+                }
+            </th>
+        </tr>
+    </tbody>
+</table>
+<br />  
+<button id="confirmOrder"> Confirm Order</button>
+
+@section scripts{
+    <script>
+        $("#confirmOrder").on("click", function (e) {               
+           window.location.href = '@Url.Action("SaveOrdersInDB", "Shopping")' ;           
+        });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
