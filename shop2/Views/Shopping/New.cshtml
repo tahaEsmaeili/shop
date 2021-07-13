@@ -1,0 +1,93 @@
+﻿@model shop.ViewModels.NewProductViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-group">
+    <label for="Product_CategoryId">Category</label>
+    @Html.DropDownListFor(m => m.Product.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Select Category Name", new { @class = "form-control" })
+</div>
+<br />
+<button id="show" class="btn btn-primary"> Show Items by Category</button>
+<button id="showOrderlist">Show my bascket</button>
+<div id="itemlist">
+</div>
+
+@section scripts{
+    <script>              
+        $(document).ready(function () {
+            var button = null;            
+        });
+        function listmaker(name, price, available, details, imagename, id) {
+            return ('<table class="table table-bordered table-hover"><tr><td>Product Name:</td><td>' + name + '</td></tr><tr><td>Price:</td><td>' + price + '</td></tr><tr><td>Available:</td><td>' + available + '</td></tr><tr><td>Details:</td><td>' + details + '</td></tr><tr><td>Image:</td><td><img style="width:200px;height:300px;" src="/UploadImage/' + imagename + '"></td></tr><tr><td>Count to Buy:</td><td><input type="text" id="textbox_' + id + '"></td></tr><tr><td><label id="message_' + id + '"></label></td><td><button id="btn_' + id + '">Add to Bascket</button></td></tr></table>');
+        }
+        function messages(productId, content, color) {
+            $("#message_" + productId).text(content);
+            $("#message_" + productId).css('color', color);
+        }
+        $("#show").on("click", function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/api/products",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    document.getElementById("itemlist").innerHTML = "";
+                    $.each(data, function (i) {
+                        if (data[i].categoryId == $("#Product_CategoryId").val()) {
+                            document.getElementById("itemlist").innerHTML += listmaker(data[i].name, data[i].price, data[i].available, data[i].details, data[i].imagesName, data[i].id);
+                           
+                        }
+                    });
+                    $.each(data, function (j) {
+                        if (data[j].categoryId == $("#Product_CategoryId").val()) {
+                            $("#btn_" + data[j].id).on("click", function () {
+                                saveToSession(data[j].id, $("#textbox_" + data[j].id).val(), data[j].price);
+                                $("#textbox_" + data[j].id).val("");
+                            });
+                        }
+                    });
+                }
+            });
+
+        });
+        function saveToSession(product_id, count, price) {
+            order = new Object();
+            order.productId = product_id;
+            order.count = count;
+            order.price = price;            
+            $.ajax({
+                url: "/Shopping/SaveInSession",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(order),
+                success: function() {                    
+                    messages(product_id, "This product is Successfully Added", "#33ce1e");
+                },
+                error: function (jqXHR, exception) {
+                    if (jqXHR.status == 200) {
+                        messages(product_id, "This product is Successfully Added", "#33ce1e");
+                    } else {
+                        $("#message_" + product_id).text("An error occured");
+                        $("#message_" + product_id).css('color', '#dd272a');
+                    }
+                  
+                }
+            });
+        }
+       
+        $("#showOrderlist").on("click", function (e) {   
+            e.preventDefault();
+            window.location.href = '@Url.Action("ShowOrders", "Shopping")';
+        });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+
+

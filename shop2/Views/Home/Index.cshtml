@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
+    <h1>ASP.NET MVC Sample Web Application </h1>
+    <p class="lead">This website is a sample shopping site</p>
+
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            First of all, an admin user with admin@shop.com email and Zaq123$ password needs to login and create categories and products. Products page is desgined to manage products including editing, adding and deleting.
+        </p>
+        <p>@Html.ActionLink("Products", "New", "Products")</p>
+        <p>@Html.ActionLink("Category", "New", "Category")</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Do Shopping</h2>
+        <p>A guest user can visit shopping page and select a category to see the products of it. By typing a number for a desired product and adding to the basket,User then can see the basket by pressing show my basket button.</p>
+        <p>@Html.ActionLink("Shopping", "New", "Shopping")</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Ordering</h2>
+        <p> At the orders page where the basket shows its content,user can press confirm button to send its order and finalize it.Guest user needs to be registerd first.A sample guest user is created with guest@shop.com email and Qaz123$ password</p>
+        <p> If you are logined through admin user you need to logoff first and then login through a guest user</p>
+    </div>
+</div>
