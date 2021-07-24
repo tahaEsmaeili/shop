@@ -1,0 +1,91 @@
+﻿@model shop.ViewModels.OrdersListViewModel
+@{
+    ViewBag.Title = "OrdersList";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+
+<h2>OrdersList</h2>
+<table>
+    <tr>
+        <td>
+            <div class="form-group">
+                <label for="Product_CategoryId">Category</label>
+                @Html.DropDownListFor(m => m.Product.CategoryId, new SelectList(Model.Categories, "Id", "Name"), "Select Category Name", new { @class = "form-control" })
+            </div>
+            <br />
+            <button id="showByCategory" class="btn btn-primary"> Show orders by category</button>
+        </td>
+        <td></td>
+        <td>
+            <div class="form-group">
+                <label for="Product_Id">Product</label>
+                @Html.DropDownListFor(m => m.Product.Id, new SelectList(Model.Products, "Id", "Name"), "Select Product Name", new { @class = "form-control" })
+            </div>
+            <br />
+            <button id="showByProduct" class="btn btn-primary"> Show orders by product</button>
+        </td>
+    </tr>
+</table>
+
+
+<table id="ordersList" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Customer Email</th>
+            <th>Date of order</th>
+            <th>Product Name</th>
+            <th>Product Price</th>
+            <th>Number Of Product</th>
+            <th>Total Price</th>
+            <th>Product Category</th>
+            <th>Photo</th>
+            <th>PDF</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+
+        $("#showByCategory").on("click", function () {
+            $("#ordersList").DataTable().destroy();
+            fillDataTable("GetByCategory", $("#Product_CategoryId").val());
+        });
+        $("#showByProduct").on("click", function () {
+            $("#ordersList").DataTable().destroy();
+            fillDataTable("GetByProduct", $("#Product_Id").val());
+        });
+        function fillDataTable(actionName, value) {
+            $("#ordersList").DataTable({
+                ajax: {
+                    url: "../api/orders/" + actionName + "/" + value,
+                    dataSrc: ""
+                },
+                columns: [{ data: "customerEmail" }
+                    , { data: "date" }
+                    , { data: "product.name" }
+                    , { data: "price" }
+                    , { data: "count" }
+                    , { data: "price", render: function (data, type, order) { return data * order.count } }
+                    , { data: "product.category.name" }
+                    , { data: "product.imagesName", render: function (data) { return "<a href=# onclick=showPhoto('" + data + "')>Photo</a>" } }
+                    , { data: "product.imagesName", render: function (data, type, order) { return "<a href=# onclick=showPDF('" + order.id + "')>Download PDF</a>" } }]
+            });
+        }
+
+        function showPhoto(photoName) {
+            var path = '/UploadImage/';
+            path += photoName;
+            window.open(path, 'popup', 'width=300, height=400');
+        }
+        function showPDF(orderId) {
+            let actionPath = "/Orders/OrdersListForPrint/" + orderId;            
+            window.open(actionPath, 'popup', 'width=300, height=400');
+        }
+
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

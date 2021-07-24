@@ -1,12 +1,10 @@
 ﻿@{
     ViewBag.Title = "Home Page";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET MVC Sample Web Application </h1>
+<div class="jumbotron">   
     <p class="lead">This website is a sample shopping site</p>
-
 </div>
 
 <div class="row">
@@ -27,5 +25,6 @@
         <h2>Ordering</h2>
         <p> At the orders page where the basket shows its content,user can press confirm button to send its order and finalize it.Guest user needs to be registerd first.A sample guest user is created with guest@shop.com email and Qaz123$ password</p>
         <p> If you are logined through admin user you need to logoff first and then login through a guest user</p>
+        <p>@Html.ActionLink("Orders List", "OrdersList", "Orders")</p>
     </div>
 </div>

@@ -1,0 +1,32 @@
+﻿@model shop.Models.Order
+@{
+    ViewBag.Title = "OrderInvoice";   
+ }
+
+<h2>Order invoice</h2>
+
+<table id="ordersList" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Order Id</th>
+            <th>Customer Email</th>
+            <th>Date of order</th>           
+            <th>Product Price</th>
+            <th>Number Of Product</th>
+            
+        </tr>
+    </thead>
+    <tbody>               
+        <tr>
+            <th>@Model.Id</th>
+            <th>@Model.CustomerEmail</th>
+            <th>@Model.Date</th>
+            <th>@Model.Price</th>
+            <th>@Model.Count</th>       
+           
+        </tr>       
+    </tbody>
+</table>
+
+
+
